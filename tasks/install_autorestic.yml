@@ -16,7 +16,7 @@
 
 - name: Update to latest autorestic version
   command: "/usr/local/bin/autorestic upgrade"
-  when:  update_binary == True
+  when: update_binary == True
   register: update
   changed_when: "'Already up to date' not in update.stdout_lines"
 
@@ -33,12 +33,12 @@
 
 - name: download autorestic release
   get_url:
-      url: https://github.com/cupcakearmy/autorestic/releases/download/{{autorestic_ver}}/autorestic_{{autorestic_ver | regex_replace('v')}}_linux_amd64.bz2
-      dest: /tmp
-      force: yes
-      owner: "{{main_username}}"
-      group: "{{main_username}}"
-      mode: +x
+    url: "{{autorestic_gh_url}}/{{autorestic_ver}}/autorestic_{{autorestic_ver|regex_replace('v')}}_linux_amd64.bz2"
+    dest: /tmp
+    force: yes
+    owner: "{{main_username}}"
+    group: "{{main_username}}"
+    mode: +x
   when: force_install == True
 
 - name: set autorestic filename
