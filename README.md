@@ -101,3 +101,9 @@ For additional documentation, please see the [official docs](https://autorestic.
 - Add cronjob variables (?) for basic tasks (backup, forget, etc).  Or add support for 
 - Switch to variable for distro (ie for file extension)
 - Find a way to pin restic even if updating autorestic
+
+### If you appreciate my work, please consider buying me a beer (or cofee, or whatever)
+[![BuyMeCoffee][buymecoffee-shield]][buymecoffee-link]
+
+[buymecoffee-link]: https://www.buymeacoffee.com/fuzzymistborn
+[buymecoffee-shield]: https://cdn.buymeacoffee.com/buttons/v2/default-blue.png
