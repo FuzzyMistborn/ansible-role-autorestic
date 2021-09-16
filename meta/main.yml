@@ -1,0 +1,29 @@
+---
+galaxy_info:
+  role_name: autorestic
+  author: FuzzyMistborn
+  description: Installs restic/autorestic and creates backup configuration file
+  issue_tracker_url: https://github.com/FuzzyMistborn/ansible-role-autorestic/issues
+  license: GPLv3
+  min_ansible_version: 2.4
+  platforms:
+  - name: Fedora
+    versions:
+    - all
+  - name: opensuse
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+  - name: GenericLinux
+    versions:
+    - all
+    - any
+  - name: Debian
+    versions:
+    - all
+  categories:
+  - system
+  - web
+dependencies: []

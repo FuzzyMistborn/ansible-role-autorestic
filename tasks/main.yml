@@ -1,0 +1,10 @@
+---
+
+- name: install restic
+  include: install_restic.yml
+
+- name: install autorestic
+  include: install_autorestic.yml
+
+- name: configure autorestic
+  include: configure.yml
