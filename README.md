@@ -20,7 +20,22 @@ Additionally, you can pin a specific version of either binary with `autorestic_v
 autorestic_ver: v1.2.0
 restic_ver: v0.12.1
 ```
-Note that the `v` is necessary.  Currently, it's not possible to pin a version of `restic` when upgrading `autorestic` because the upgrade command for `autorestic` upgrades both binaries.  If you want to disable both, you'll need to pin a version of `autorestic` as well.
+Note that the `v` is necessary.  
+
+**Currently, it's not possible to pin a version of `restic` when upgrading `autorestic` because the upgrade command for `autorestic` upgrades both binaries.  If you want to disable both, you'll need to pin a version of `autorestic` as well.**
+
+Other variables that can be changed:
+
+```yaml
+autorestic_generator_output_path: "~"
+autorestic_generator_generator_uid: "1000"
+autorestic_generator_generator_gid: "1000"
+
+autorestic_distro: linux_amd64
+restic_distro: linux_amd64
+```
+
+See the release pages for [autorestic](https://github.com/cupcakearmy/autorestic/releases) and [restic](https://github.com/restic/restic/releases/) to find the correct distribution for your install.
 
 ### Example for Autorestic Config File
 
@@ -98,8 +113,7 @@ For additional documentation, please see the [official docs](https://autorestic.
 
 ## To Do
 
-- Add cronjob variables (?) for basic tasks (backup, forget, etc).  Or add support for 
-- Switch to variable for distro (ie for file extension)
+- Add cronjob variables (?) for basic tasks (backup, forget, etc).
 - Find a way to pin restic even if updating autorestic
 
 ### If you appreciate my work, please consider buying me a beer (or cofee, or whatever)

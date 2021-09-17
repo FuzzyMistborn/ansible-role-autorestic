@@ -6,3 +6,6 @@ autorestic_generator_generator_gid: "1000"
 
 autorestic_gh_url: https://github.com/cupcakearmy/autorestic/releases/download
 restic_gh_url: https://github.com/restic/restic/releases/download
+
+autorestic_distro: linux_amd64
+restic_distro: linux_amd64
