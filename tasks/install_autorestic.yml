@@ -33,16 +33,16 @@
 
 - name: download autorestic release
   get_url:
-    url: "{{autorestic_gh_url}}/{{autorestic_ver}}/autorestic_{{autorestic_ver|regex_replace('v')}}_{{autorestic_distro}}.bz2"
+    url: "{{ autorestic_gh_url }}/{{ autorestic_ver }}/autorestic_{{ autorestic_ver|regex_replace('v') }}_{{ autorestic_distro }}.bz2"
     dest: /tmp
     force: yes
-    owner: "{{main_username}}"
-    group: "{{main_username}}"
+    owner: "{{ main_username }}"
+    group: "{{ main_username }}"
     mode: +x
   when: force_install == True
 
 - name: set autorestic filename
-  set_fact: file_name="autorestic_{{ autorestic_ver | regex_replace('v')}}_{{autorestic_distro}}.bz2"
+  set_fact: file_name="autorestic_{{ autorestic_ver | regex_replace('v') }}_{{ autorestic_distro }}.bz2"
   when: force_install == True
 
 - name: Unzip autorestic release

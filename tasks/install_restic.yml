@@ -33,16 +33,16 @@
 
 - name: download restic release
   get_url:
-    url: "{{restic_gh_url}}/{{restic_ver}}/restic_{{restic_ver | regex_replace('v')}}_{{restic_distro}}.bz2"
+    url: "{{ restic_gh_url }}/{{ restic_ver }}/restic_{{ restic_ver | regex_replace('v') }}_{{ restic_distro }}.bz2"
     dest: /tmp
     force: yes
-    owner: "{{main_username}}"
-    group: "{{main_username}}"
+    owner: "{{ main_username }}"
+    group: "{{ main_username }}"
     mode: +x
   when: force_install == True
 
 - name: set restic filename
-  set_fact: file_name="restic_{{ restic_ver | regex_replace('v')}}_{{restic_distro}}.bz2"
+  set_fact: file_name="restic_{{ restic_ver | regex_replace('v') }}_{{ restic_distro }}.bz2"
   when: force_install == True
 
 - name: Unzip restic release

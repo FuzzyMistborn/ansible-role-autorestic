@@ -1,0 +1,8 @@
+---
+exclude_paths:
+  - galaxy_roles/
+  - galaxy_collections/
+
+skip_list:
+  - no-relative-paths
+  - literal-compare

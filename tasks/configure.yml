@@ -11,3 +11,4 @@
     dest: "{{ autorestic_generator_output_path }}/.autorestic.yml"
     owner: "{{ autorestic_generator_generator_uid }}"
     group: "{{ autorestic_generator_generator_gid }}"
+    mode: '0644'
