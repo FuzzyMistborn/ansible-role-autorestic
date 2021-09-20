@@ -12,6 +12,7 @@ backends:
 {% endfor %}
 {% if backend.options is defined %}
     options: 
+{% endif %}
 {% if backend.options.backup is defined %}
       backup:
 {% endif %}
@@ -57,7 +58,6 @@ backends:
 {% if backend.options.forget.within is defined %}
         keep-within: {{backend.options.forget.within}}
 {% endif %}
-{% endif %}
 {% endfor %}
 
 locations:
@@ -73,6 +73,7 @@ locations:
 {% endif %}
 {% if location.hooks is defined %}
     hooks: 
+{% endif %}
 {% if location.hooks.before is defined %}
       before: 
 {% for before in location.hooks.before %}
@@ -99,6 +100,7 @@ locations:
 {% endif %}
 {% if location.options is defined %}
     options: 
+{% endif %}
 {% if location.options.backup is defined %}
       backup:
 {% endif %}
@@ -143,7 +145,5 @@ locations:
 {% endif %}
 {% if location.options.forget.within is defined %}
         keep-within: {{location.options.forget.within}}
-{% endif %}
-{% endif %}
 {% endif %}
 {% endfor %}
