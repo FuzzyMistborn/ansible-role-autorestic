@@ -1,11 +1,33 @@
 ---
 
-autorestic_generator_output_path: "~"
-autorestic_generator_generator_uid: "1000"
-autorestic_generator_generator_gid: "1000"
+### Restic
+restic_download_latest_ver: true # Change to 'false' to pin to a specific version
+restic_pinned_ver: 0.12.1 # Overriden by 'autorestic_download_latest_ver' variable
+restic_distro: linux_amd64
+
+restic_gh_url: https://github.com/restic/restic/releases/download
+restic_download_directory: "/tmp/restic"
+
+restic_install_directory: /usr/local/bin
+restic_install_binary: restic
+restic_install_path: "{{ restic_install_directory }}/{{ restic_install_binary }}"
+
+### Autorestic
+autorestic_download_latest_ver: true # Change to 'false' to pin to a specific version
+autorestic_pinned_ver: 1.2.0 # Overriden by 'autorestic_download_latest_ver' variable
+autorestic_distro: linux_amd64
 
 autorestic_gh_url: https://github.com/cupcakearmy/autorestic/releases/download
-restic_gh_url: https://github.com/restic/restic/releases/download
+autorestic_download_directory: "/tmp/autorestic"
 
-autorestic_distro: linux_amd64
-restic_distro: linux_amd64
+autorestic_install_directory: /usr/local/bin
+autorestic_install_binary: autorestic
+autorestic_install_path: "{{ autorestic_install_directory }}/{{ autorestic_install_binary }}"
+
+### Autorestic Config
+autorestic_config_user: root
+autorestic_config_yaml: CHANGEME # autorestic configuration in yaml
+autorestic_config_path: "{{ autorestic_user_directory }}/.autorestic.yml"
+autorestic_config_mode: 0600
+autorestic_config_owner: "{{ autorestic_user }}"
+autorestic_config_group: "{{ autorestic_user }}"

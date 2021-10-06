@@ -1,14 +1,20 @@
 ---
-- name: ensure destination for autorestic configuration file exists
-  file:
-    path: "{{ autorestic_generator_output_path }}"
-    state: directory
+- name: Make sure autorestic user exists
+  user:
+    name: "{{ autorestic_user }}"
+  register: autorestic_user_register
+  become: true
 
-- name: write autorestic conf file
-  template:
-    backup: yes
-    src: ../templates/autorestic.yml.j2
-    dest: "{{ autorestic_generator_output_path }}/.autorestic.yml"
-    owner: "{{ autorestic_generator_generator_uid }}"
-    group: "{{ autorestic_generator_generator_gid }}"
-    mode: '0644'
+- name: Set autorestic_user_directory variable
+  set_fact:
+    autorestic_user_directory: "{{ autorestic_user_register.home }}"
+
+- name: Copy autorestic config file
+  copy:
+    content: "{{ autorestic_config_yaml | to_nice_yaml }}"
+    dest: "{{ autorestic_config_path }}"
+    owner: "{{ autorestic_config_owner }}"
+    group: "{{ autorestic_config_group }}"
+    mode: "{{ autorestic_config_mode }}"
+  when: autorestic_config_yaml != "CHANGEME"
+  become: true

@@ -1,6 +1,6 @@
 # Autorestic/Restic Installer
 
-An ansible role to install and configure [restic](https://github.com/restic/restic) and [autorestic](https://github.com/cupcakearmy/autorestic).  Inspiration/basis for the role goes to [@IronicBadger](https://github.com/IronicBadger/infra/tree/master/roles/ktz-autorestic)
+An ansible role to install and configure [restic](https://github.com/restic/restic) and [autorestic](https://github.com/cupcakearmy/autorestic).  Inspiration/basis for the role goes to [@IronicBadger](https://github.com/IronicBadger/infra/tree/master/roles/ktz-autorestic) and also to [@ItsNotGoodName](https://github.com/ItsNotGoodName/ansible-role-autorestic).
 
 Install with `ansible-galaxy install fuzzymistborn.autorestic`
 
