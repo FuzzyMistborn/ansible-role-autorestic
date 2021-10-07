@@ -1,50 +1,67 @@
 ---
-
-- name: check whether restic installed
-  find:
-    paths: /usr/bin
-    patterns: restic
+- name: get status of restic_install_path
+  stat:
+    path: "{{ restic_install_path }}"
   register: is_installed
 
-- name: install restic binary?
+- name: set restic installed
   set_fact:
-    force_install: "{{ is_installed.matched == 0 }}"
+    restic_is_installed: "{{ is_installed.stat.exists }}"
 
-- name: update restic binary?
-  set_fact:
-    update_binary: "{{ restic_ver is undefined and is_installed.matched == 1 }}"
+- name: get restic version
+  shell: "set -o pipefail && {{ is_installed.stat.path }} version | grep -oP 'restic\\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
+  register: installed_version_registered
+  changed_when: false
+  when: restic_is_installed == True
 
-- name: Update restic to latest version
-  command: "/usr/bin/restic self-update"
-  when: update_binary == True
-  register: update
-  changed_when: "'restic is up to date' not in update.stdout_lines"
-
-- name: get latest restic release
+- name: get latest GH restic version
   uri:
     url: https://api.github.com/repos/restic/restic/releases/latest
     return_content: true
-  register: release_latest
-  when: restic_ver is undefined and force_install == True
+  register: release_version_registered
+  when: restic_download_latest_ver == True
 
-- name: set restic version if not already
-  set_fact: restic_ver="{{ release_latest.json.tag_name }}"
-  when: restic_ver is undefined and force_install == True
+- name: set restic version (latest)
+  set_fact:
+    restic_ver: "{{ release_version_registered.json.tag_name|regex_replace('v') }}"
+  when: restic_download_latest_ver == True
 
-- name: download restic release
-  get_url:
-    url: "{{ restic_gh_url }}/{{ restic_ver }}/restic_{{ restic_ver | regex_replace('v') }}_{{ restic_distro }}.bz2"
-    dest: /tmp
-    force: yes
-    owner: "{{ main_username }}"
-    group: "{{ main_username }}"
-    mode: +x
-  when: force_install == True
+- name: set restic version (pinned)
+  set_fact:
+    restic_ver: "{{ restic_pinned_ver }}"
+  when: restic_download_latest_ver == False
 
-- name: set restic filename
-  set_fact: file_name="restic_{{ restic_ver | regex_replace('v') }}_{{ restic_distro }}.bz2"
-  when: force_install == True
+- name: update restic binary
+  command: "{{ is_installed.stat.path }} self-update"
+  when: restic_is_installed == True and restic_download_latest_ver == True
+  register: update
+  changed_when: "'restic is up to date' not in update.stdout_lines"
 
-- name: Unzip restic release
-  shell: "cd /tmp && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} /usr/bin/restic"
-  when: force_install == True
+- block:
+    - name: ensure restic_download_directory does not exist
+      file:
+        path: "{{ restic_download_directory }}"
+        state: absent
+
+    - name: create restic_download_directory
+      file:
+        path: "{{ restic_download_directory }}"
+        state: directory
+        mode: 0755
+
+    - name: download restic
+      get_url:
+        url: "{{ restic_gh_url }}/v{{ restic_ver }}/restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
+        dest: "{{ restic_download_directory }}"
+        force: yes
+        owner: root
+        group: root
+        mode: +x
+
+    - name: set restic filename
+      set_fact: file_name="restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
+
+    - name: Unzip restic release
+      shell: "cd {{ restic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ restic_install_path }}"
+
+  when: restic_is_installed == False or ( restic_is_installed == True and restic_download_latest_ver == False and installed_version_registered.stdout != restic_pinned_ver )

@@ -1,6 +1,6 @@
 # Autorestic/Restic Installer
 
-An ansible role to install and configure [restic](https://github.com/restic/restic) and [autorestic](https://github.com/cupcakearmy/autorestic).  Inspiration/basis for the role goes to [@IronicBadger](https://github.com/IronicBadger/infra/tree/master/roles/ktz-autorestic) and also to [@ItsNotGoodName](https://github.com/ItsNotGoodName/ansible-role-autorestic).
+An ansible role to install and configure [restic](https://github.com/restic/restic) and [autorestic](https://github.com/cupcakearmy/autorestic).  Inspiration/basis for the role goes to [@IronicBadger](https://github.com/IronicBadger/infra/tree/master/roles/ktz-autorestic) and also to [@ItsNotGoodName](https://github.com/ItsNotGoodName/ansible-role-autorestic) for improvements in the installer/config copying.
 
 Install with `ansible-galaxy install fuzzymistborn.autorestic`
 
@@ -12,109 +12,68 @@ Install with `ansible-galaxy install fuzzymistborn.autorestic`
 
 ## Configuration
 
-This role has a few variables that can be configured.  Main ones to consider relate to the `autorestic` config file.  
+This role has a number of variables that can be configured.
 
-Additionally, you can pin a specific version of either binary with `autorestic_ver` or `restic_ver`.  By default the role fetches and installs the latest available version, and will run the update command if the binary is already present every time the role is run.  You can disable this by pinning to a specific version.  Here's an example if you wanted to set the version.
+Additionally, you can pin a specific version of either binary with `autorestic_pinned_ver` or `restic_pinned_ver`.  By default the role fetches and installs the latest available version, and will run the update command if the binary is already present every time the role is run.  You can disable this by pinning to a specific version.  Here's an example if you wanted to set the version.
 
 ```yaml
-autorestic_ver: v1.2.0
-restic_ver: v0.12.1
+autorestic_download_latest_ver: false
+autorestic_pinned_ver: 1.2.0
+restic_download_latest_ver: false
+restic_pinned_ver: 0.12.1
 ```
-Note that the `v` is necessary.  
-
-**Currently, it's not possible to pin a version of `restic` when upgrading `autorestic` because the upgrade command for `autorestic` upgrades both binaries.  If you want to disable both, you'll need to pin a version of `autorestic` as well.**
+By setting a pinned version, the updater commands will not run and a version will only be pulled if the installed version does not match the pinned version.
 
 Other variables that can be changed:
 
 ```yaml
-autorestic_generator_output_path: "~"
-autorestic_generator_generator_uid: "1000"
-autorestic_generator_generator_gid: "1000"
+autorestic_config_user: root
+autorestic_config_yaml: CHANGEME  # autorestic configuration in yaml
+autorestic_config_path: "{{ autorestic_user_directory }}/.autorestic.yml"
+autorestic_config_mode: 0600
+autorestic_config_owner: "{{ autorestic_config_user }}"
+autorestic_config_group: "{{ autorestic_config_user }}"
 
 autorestic_distro: linux_amd64
 restic_distro: linux_amd64
 ```
+The other variables, like `restic_gh_url`, `restic_install_directory`, etc I do not recommend changing unless you want to customize the install.
 
 See the release pages for [autorestic](https://github.com/cupcakearmy/autorestic/releases) and [restic](https://github.com/restic/restic/releases/) to find the correct distribution for your install.
 
 ### Example for Autorestic Config File
 
+Autorestic configuration is copied to the root home directory by default. It can be changed to another user's home directory with the `autorestic_config_user` variable.
+
 Below is an example that shows all the available options.
 
 ```yaml
-autorestic_locations:
-  - name: docker
-    from: '/opt/docker'
-    to: 
-      - synology_docker
-      - b2_docker
-    cron: "'0 3 * * 0'"
-    hooks:
-      before:
-        - echo "before"
-      after:
-        - echo "after"
-        - echo "after2"
-      success:
-        - echo "success"
-      failure:
-        - echo "failure"
-    options:
-        backup:
-          tag:
-            - foo
-            - bar
-          exclude:
-            - '*.log'
-          excludefile: 
-            - .gitignore
-        forget:
-          last: 3
-          hourly: 1
-          daily: 10
-          weekly: 2
-          monthly: 1
-          yearly: 2
-          within: 10
-  - name: home
-    from: '/home/user1'
-    to: 
-      - synology_docker
-autorestic_backends:
-  - name: synology_docker
-    type: s3
-    path: "http://192.168.1.10:9000/docker"
-    key: some-random-password-134893987987134
-    env:
-      - "AWS_ACCESS_KEY_ID: YOUR_AWS_KEY_ID"
-      - "AWS_SECRET_ACCESS_KEY: YOUR_AWS_KEY"
-    options:
-        backup:
-          tag:
-            - foo
-            - bar
-          exclude:
-            - '*.log'
-          excludefile: 
-            - .gitignore
-        forget:
-          last: 3
-          weekly: 2
-          within: 10
-  - name: b2_docker
-    type: b2
-    path: "B2_BUCKET_NAME:/docker"
-    key: some-random-password-134893987987134
-    env:
-      - "B2_ACCOUNT_ID: accountid"
-      - "B2_Account_Key: accountkey"
+autorestic_config_yaml:
+  locations:
+    docker:
+      from: '/opt/docker'
+      to:
+        - local
+        - b2_docker
+  backends:
+    local:
+      type: local
+      path: /backup
+      key: 123
+    b2_docker:
+      type: s3
+      path: 'b2_backend_url'
+      key: b2_password
+      env:
+        AWS_ACCESS_KEY_ID: 1234
+        AWS_SECRET_ACCESS_KEY: 1234abc
 ```
-For additional documentation, please see the [official docs](https://autorestic.vercel.app/).  Also please open an issue if there is a setting/configuration option that is missing.  I believe I got them all, though I may be missing a few I don't use.
+For additional documentation, please see the [official docs](https://autorestic.vercel.app/).
 
 ## To Do
 
-- Add cronjob variables (?) for basic tasks (backup, forget, etc).
-- Find a way to pin restic even if updating autorestic
+[ ] Add cronjob variables (?) for basic tasks (backup, forget, etc).
+[X] Find a way to pin restic even if updating autorestic.
 
 ### If you appreciate my work, please consider buying me a beer (or cofee, or whatever)
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee-link]

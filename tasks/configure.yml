@@ -1,7 +1,7 @@
 ---
 - name: Make sure autorestic user exists
   user:
-    name: "{{ autorestic_user }}"
+    name: "{{ autorestic_config_user }}"
   register: autorestic_user_register
   become: true
 
