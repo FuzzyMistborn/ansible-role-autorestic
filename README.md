@@ -72,8 +72,8 @@ For additional documentation, please see the [official docs](https://autorestic.
 
 ## To Do
 
-[ ] Add cronjob variables (?) for basic tasks (backup, forget, etc).
-[X] Find a way to pin restic even if updating autorestic.
+- Add cronjob variables (?) for basic tasks (backup, forget, etc).
+- ~~Find a way to pin restic even if updating autorestic.~~
 
 ### If you appreciate my work, please consider buying me a beer (or cofee, or whatever)
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee-link]
