@@ -1,6 +1,6 @@
 ---
 
-### Restic
+### Restic Install
 restic_download_latest_ver: true  # Change to 'false' to pin to a specific version
 restic_pinned_ver: 0.12.1  # Overriden by 'autorestic_download_latest_ver' variable
 restic_distro: linux_amd64
@@ -11,7 +11,7 @@ restic_download_directory: "/tmp/restic"
 restic_install_directory: /usr/local/bin
 restic_install_path: "{{ restic_install_directory }}/restic"
 
-### Autorestic
+### Autorestic Install
 autorestic_download_latest_ver: true  # Change to 'false' to pin to a specific version
 autorestic_pinned_ver: 1.2.0  # Overriden by 'autorestic_download_latest_ver' variable
 autorestic_distro: linux_amd64
@@ -29,3 +29,4 @@ autorestic_config_path: "{{ autorestic_user_directory }}/.autorestic.yml"
 autorestic_config_mode: 0600
 autorestic_config_owner: "{{ autorestic_config_user }}"
 autorestic_config_group: "{{ autorestic_config_user }}"
+autorestic_run_check: true

@@ -18,3 +18,7 @@
     mode: "{{ autorestic_config_mode }}"
   when: autorestic_config_yaml != "CHANGEME"
   become: true
+
+- name: update autorestic binary
+  command: "{{ autorestic_install_path }} check -c {{ autorestic_install_path }}"
+  when: autorestic_run_check == true
