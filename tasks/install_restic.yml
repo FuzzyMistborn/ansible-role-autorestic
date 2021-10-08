@@ -9,7 +9,7 @@
     restic_is_installed: "{{ is_installed.stat.exists }}"
 
 - name: get restic version
-  shell: "set -o pipefail && {{ is_installed.stat.path }} version | grep -oP 'restic\\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
+  shell: "{{ is_installed.stat.path }} version | grep -oP 'restic\\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
   register: installed_version_registered
   changed_when: false
   when: restic_is_installed == True

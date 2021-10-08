@@ -17,8 +17,9 @@
     group: "{{ autorestic_config_group }}"
     mode: "{{ autorestic_config_mode }}"
   when: autorestic_config_yaml != "CHANGEME"
+  register: config_update
   become: true
 
-- name: update autorestic binary
-  command: "{{ autorestic_install_path }} check -c {{ autorestic_install_path }}"
-  when: autorestic_run_check == true
+- name: run autorestic check
+  command: "{{ autorestic_install_path }} check -c {{ autorestic_config_path }}"
+  when: autorestic_run_check == true and autorestic_config_yaml != "CHANGEME" and config_update.changed == true
