@@ -2,7 +2,7 @@
 
 ### Restic Install
 restic_download_latest_ver: true  # Change to 'false' to pin to a specific version
-restic_pinned_ver: 0.12.1  # Overriden by 'autorestic_download_latest_ver' variable
+restic_pinned_ver: 0.12.1  # Overriden by 'restic_download_latest_ver' variable
 restic_distro: linux_amd64
 
 restic_gh_url: https://github.com/restic/restic/releases/download
