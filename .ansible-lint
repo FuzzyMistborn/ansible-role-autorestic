@@ -6,3 +6,4 @@ exclude_paths:
 skip_list:
   - no-relative-paths
   - literal-compare
+  - risky-shell-pipe
