@@ -1,9 +1,9 @@
 ---
 - name: install autorestic
-  include: install_autorestic.yml
+  include_tasks: install_autorestic.yml
 
 - name: install restic
-  include: install_restic.yml
+  include_tasks: install_restic.yml
 
 - name: configure autorestic
-  include: configure.yml
+  include_tasks: configure.yml
