@@ -27,7 +27,7 @@ steps:
         📝  Commit - {{ commit.message }}
 
 
-        🌐  Check output - [Link]({{build.link}})
+        🌐  [Output]({{build.link}})
         {{else}}
         ❌  Build for `{{repo.name}}` has *FAILED*!
 
@@ -35,7 +35,7 @@ steps:
         📝  Commit - {{ commit.message }}
 
 
-        🌐  Check status - [Link]({{build.link}})
+        🌐  [Output]({{build.link}})
         {{/success}}
     when:
       status: [ success, failure ]
