@@ -17,7 +17,10 @@
 - name: get latest GH autorestic version
   uri:
     url: https://api.github.com/repos/cupcakearmy/autorestic/releases/latest
+    url_username: "{{ github_api_user | default (omit) }}"
+    url_password: "{{ github_api_pass | default (omit) }}"
     return_content: true
+    force_basic_auth: "{{ github_api_auth | default (omit) }}"
   register: release_version_registered
   when: autorestic_download_latest_ver == True
 
@@ -30,12 +33,6 @@
   set_fact:
     autorestic_ver: "{{ autorestic_pinned_ver }}"
   when: autorestic_download_latest_ver == False
-
-- name: update autorestic binary
-  command: "{{ is_installed.stat.path }} upgrade"
-  when: autorestic_is_installed == True and autorestic_download_latest_ver == True
-  register: update
-  changed_when: "'Already up to date' not in update.stdout_lines"
 
 - block:
     - name: ensure autorestic_download_directory does not exist
@@ -64,4 +61,4 @@
     - name: Unzip autorestic release
       shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ autorestic_install_path }}"
 
-  when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and installed_version_registered.stdout != autorestic_pinned_ver )
+  when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == True and installed_version_registered.stdout != autorestic_ver ) or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and installed_version_registered.stdout != autorestic_pinned_ver )

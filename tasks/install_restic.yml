@@ -17,7 +17,10 @@
 - name: get latest GH restic version
   uri:
     url: https://api.github.com/repos/restic/restic/releases/latest
+    url_username: "{{ github_api_user | default (omit) }}"
+    url_password: "{{ github_api_pass | default (omit) }}"
     return_content: true
+    force_basic_auth: "{{ github_api_auth | default (omit) }}"
   register: release_version_registered
   when: restic_download_latest_ver == True
 
@@ -30,12 +33,6 @@
   set_fact:
     restic_ver: "{{ restic_pinned_ver }}"
   when: restic_download_latest_ver == False
-
-- name: update restic binary
-  command: "{{ is_installed.stat.path }} self-update"
-  when: restic_is_installed == True and restic_download_latest_ver == True
-  register: update
-  changed_when: "'restic is up to date' not in update.stdout_lines"
 
 - block:
     - name: ensure restic_download_directory does not exist
@@ -64,4 +61,4 @@
     - name: Unzip restic release
       shell: "cd {{ restic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ restic_install_path }}"
 
-  when: restic_is_installed == False or ( restic_is_installed == True and restic_download_latest_ver == False and installed_version_registered.stdout != restic_pinned_ver )
+  when: restic_is_installed == False or ( restic_is_installed == True and restic_download_latest_ver == True and installed_version_registered.stdout != restic_ver ) or ( restic_is_installed == True and restic_download_latest_ver == False and installed_version_registered.stdout != restic_pinned_ver )
