@@ -90,8 +90,5 @@ That's it!
   - Don't think I will implement.  Too personalized and too much variety in how to do.  Will keep trying to think up a way.
 - ~~Find a way to pin restic even if updating autorestic.~~
 
-### If you appreciate my work, please consider buying me a beer (or cofee, or whatever)
-[![BuyMeCoffee][buymecoffee-shield]][buymecoffee-link]
-
-[buymecoffee-link]: https://www.buymeacoffee.com/fuzzymistborn
-[buymecoffee-shield]: https://cdn.buymeacoffee.com/buttons/v2/default-blue.png
+### If you appreciate my work, please consider buying me a beer (or coffee, or whatever)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E5796VZ)
