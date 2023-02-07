@@ -11,7 +11,7 @@
 
 - name: Copy autorestic config file
   copy:
-    content: "{{ autorestic_config_yaml | to_nice_yaml }}"
+    content: "{{ autorestic_config_yaml | to_json(vault_to_text=True) | from_json | to_nice_yaml }}"
     dest: "{{ autorestic_config_path }}"
     owner: "{{ autorestic_config_owner }}"
     group: "{{ autorestic_config_group }}"
