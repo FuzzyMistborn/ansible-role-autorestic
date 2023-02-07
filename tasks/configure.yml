@@ -1,16 +1,16 @@
 ---
 - name: Make sure autorestic user exists
-  user:
+  ansible.builtin.user:
     name: "{{ autorestic_config_user }}"
   register: autorestic_user_register
   become: true
 
 - name: Set autorestic_user_directory variable
-  set_fact:
+  ansible.builtin.set_fact:
     autorestic_user_directory: "{{ autorestic_user_register.home }}"
 
 - name: Copy autorestic config file
-  copy:
+  ansible.builtin.copy:
     content: "{{ autorestic_config_yaml | to_json(vault_to_text=True) | from_json | to_nice_yaml }}"
     dest: "{{ autorestic_config_path }}"
     owner: "{{ autorestic_config_owner }}"
@@ -20,6 +20,6 @@
   register: config_update
   become: true
 
-- name: run autorestic check
-  command: "{{ autorestic_install_path }} check -c {{ autorestic_config_path }}"
+- name: Run autorestic check
+  ansible.builtin.command: "{{ autorestic_install_path }} check -c {{ autorestic_config_path }}"
   when: autorestic_run_check == true and autorestic_config_yaml != "CHANGEME" and config_update.changed == true

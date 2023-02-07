@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   role_name: autorestic
-  author: fuzzymistborn
+  author: FuzzyMistborn
   description: Installs restic/autorestic and creates backup configuration file
   issue_tracker_url: https://github.com/FuzzyMistborn/ansible-role-autorestic/issues
   license: GPLv3
@@ -23,7 +23,4 @@ galaxy_info:
     - name: Debian
       versions:
         - all
-  galaxy-tags:
-    - system
-    - web
 dependencies: []

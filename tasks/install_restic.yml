@@ -1,53 +1,53 @@
 ---
-- name: get status of restic_install_path
-  stat:
+- name: Get status of restic_install_path
+  ansible.builtin.stat:
     path: "{{ restic_install_path }}"
   register: is_installed
 
-- name: set restic installed
-  set_fact:
+- name: Set restic installed
+  ansible.builtin.set_fact:
     restic_is_installed: "{{ is_installed.stat.exists }}"
 
-- name: get restic version
-  shell: "{{ is_installed.stat.path }} version | grep -oP 'restic\\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
+- name: Get restic version
+  ansible.builtin.shell: "{{ is_installed.stat.path }} version | grep -oP 'restic\\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
   register: installed_version_registered
   changed_when: false
   when: restic_is_installed == True
 
-- name: get latest GH restic version
-  uri:
+- name: Get latest GH restic version
+  ansible.builtin.uri:
     url: https://api.github.com/repos/restic/restic/releases/latest
-    url_username: "{{ github_api_user | default (omit) }}"
-    url_password: "{{ github_api_pass | default (omit) }}"
+    url_username: "{{ github_api_user | default(omit) }}"
+    url_password: "{{ github_api_pass | default(omit) }}"
     return_content: true
-    force_basic_auth: "{{ github_api_auth | default (omit) }}"
+    force_basic_auth: "{{ github_api_auth | default(omit) }}"
   register: release_version_registered
   when: restic_download_latest_ver == True
 
-- name: set restic version (latest)
-  set_fact:
-    restic_ver: "{{ release_version_registered.json.tag_name|regex_replace('v') }}"
+- name: Set restic version (latest)
+  ansible.builtin.set_fact:
+    restic_ver: "{{ release_version_registered.json.tag_name | regex_replace('v') }}"
   when: restic_download_latest_ver == True
 
-- name: set restic version (pinned)
-  set_fact:
+- name: Set restic version (pinned)
+  ansible.builtin.set_fact:
     restic_ver: "{{ restic_pinned_ver }}"
   when: restic_download_latest_ver == False
 
 - block:
-    - name: ensure restic_download_directory does not exist
-      file:
+    - name: Ensure restic_download_directory does not exist
+      ansible.builtin.file:
         path: "{{ restic_download_directory }}"
         state: absent
 
-    - name: create restic_download_directory
-      file:
+    - name: Create restic_download_directory
+      ansible.builtin.file:
         path: "{{ restic_download_directory }}"
         state: directory
         mode: 0755
 
-    - name: download restic
-      get_url:
+    - name: Download restic
+      ansible.builtin.get_url:
         url: "{{ restic_gh_url }}/v{{ restic_ver }}/restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
         dest: "{{ restic_download_directory }}"
         force: yes
@@ -55,10 +55,10 @@
         group: root
         mode: +x
 
-    - name: set restic filename
-      set_fact: file_name="restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
+    - name: Set restic filename
+      ansible.builtin.set_fact: file_name="restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
 
     - name: Unzip restic release
-      shell: "cd {{ restic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ restic_install_path }}"
+      ansible.builtin.shell: "cd {{ restic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ restic_install_path }}"
 
   when: restic_is_installed == False or ( restic_is_installed == True and restic_download_latest_ver == True and installed_version_registered.stdout != restic_ver ) or ( restic_is_installed == True and restic_download_latest_ver == False and installed_version_registered.stdout != restic_pinned_ver )

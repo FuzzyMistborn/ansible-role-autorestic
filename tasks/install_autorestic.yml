@@ -1,53 +1,53 @@
 ---
-- name: get status of autorestic_install_path
-  stat:
+- name: Get status of autorestic_install_path
+  ansible.builtin.stat:
     path: "{{ autorestic_install_path }}"
   register: is_installed
 
-- name: set autorestic installed
-  set_fact:
+- name: Set autorestic installed
+  ansible.builtin.set_fact:
     autorestic_is_installed: "{{ is_installed.stat.exists }}"
 
-- name: get installed autorestic version
-  shell: "{{ is_installed.stat.path }} --version | grep -oP 'autorestic\\ version\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
+- name: Get installed autorestic version
+  ansible.builtin.shell: "{{ is_installed.stat.path }} --version | grep -oP 'autorestic\\ version\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
   register: installed_version_registered
   changed_when: false
   when: autorestic_is_installed == True
 
-- name: get latest GH autorestic version
-  uri:
+- name: Get latest GH autorestic version
+  ansible.builtin.uri:
     url: https://api.github.com/repos/cupcakearmy/autorestic/releases/latest
-    url_username: "{{ github_api_user | default (omit) }}"
-    url_password: "{{ github_api_pass | default (omit) }}"
+    url_username: "{{ github_api_user | default(omit) }}"
+    url_password: "{{ github_api_pass | default(omit) }}"
     return_content: true
-    force_basic_auth: "{{ github_api_auth | default (omit) }}"
+    force_basic_auth: "{{ github_api_auth | default(omit) }}"
   register: release_version_registered
   when: autorestic_download_latest_ver == True
 
-- name: set autorestic version (latest)
-  set_fact:
-    autorestic_ver: "{{ release_version_registered.json.tag_name|regex_replace('v') }}"
+- name: Set autorestic version (latest)
+  ansible.builtin.set_fact:
+    autorestic_ver: "{{ release_version_registered.json.tag_name | regex_replace('v') }}"
   when: autorestic_download_latest_ver == True
 
-- name: set autorestic version (pinned)
-  set_fact:
+- name: Set autorestic version (pinned)
+  ansible.builtin.set_fact:
     autorestic_ver: "{{ autorestic_pinned_ver }}"
   when: autorestic_download_latest_ver == False
 
 - block:
-    - name: ensure autorestic_download_directory does not exist
-      file:
+    - name: Ensure autorestic_download_directory does not exist
+      ansible.builtin.file:
         path: "{{ autorestic_download_directory }}"
         state: absent
 
-    - name: create autorestic_download_directory
-      file:
+    - name: Create autorestic_download_directory
+      ansible.builtin.file:
         path: "{{ autorestic_download_directory }}"
         state: directory
         mode: 0755
 
-    - name: download autorestic
-      get_url:
+    - name: Download autorestic
+      ansible.builtin.get_url:
         url: "{{ autorestic_gh_url }}/v{{ autorestic_ver }}/autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
         dest: "{{ autorestic_download_directory }}"
         force: yes
@@ -55,10 +55,10 @@
         group: root
         mode: +x
 
-    - name: set autorestic filename
-      set_fact: file_name="autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
+    - name: Set autorestic filename
+      ansible.builtin.set_fact: file_name="autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
 
     - name: Unzip autorestic release
-      shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ autorestic_install_path }}"
+      ansible.builtin.shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ autorestic_install_path }}"
 
   when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == True and installed_version_registered.stdout != autorestic_ver ) or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and installed_version_registered.stdout != autorestic_pinned_ver )

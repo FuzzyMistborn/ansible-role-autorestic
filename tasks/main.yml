@@ -1,9 +1,9 @@
 ---
-- name: install autorestic
-  include_tasks: install_autorestic.yml
+- name: Install autorestic
+  ansible.builtin.include_tasks: install_autorestic.yml
 
-- name: install restic
-  include_tasks: install_restic.yml
+- name: Install restic
+  ansible.builtin.include_tasks: install_restic.yml
 
-- name: configure autorestic
-  include_tasks: configure.yml
+- name: Configure autorestic
+  ansible.builtin.include_tasks: configure.yml
