@@ -55,6 +55,11 @@
         group: root
         mode: +x
 
+    - name: Ensure bzip2 is installed
+      ansible.builtin.package:
+        name: bzip2
+        state: present
+
     - name: Set autorestic filename
       ansible.builtin.set_fact: file_name="autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
 
