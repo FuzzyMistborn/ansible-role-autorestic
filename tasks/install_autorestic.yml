@@ -34,7 +34,9 @@
     autorestic_ver: "{{ autorestic_pinned_ver }}"
   when: autorestic_download_latest_ver == False
 
-- block:
+- name: Install Autorestic
+  when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == True and installed_version_registered.stdout != autorestic_ver ) or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and installed_version_registered.stdout != autorestic_pinned_ver )
+  block:
     - name: Ensure autorestic_download_directory does not exist
       ansible.builtin.file:
         path: "{{ autorestic_download_directory }}"
@@ -61,9 +63,8 @@
         state: present
 
     - name: Set autorestic filename
-      ansible.builtin.set_fact: file_name="autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
+      ansible.builtin.set_fact:
+        file_name: "autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
 
     - name: Unzip autorestic release
       ansible.builtin.shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ autorestic_install_path }}"
-
-  when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == True and installed_version_registered.stdout != autorestic_ver ) or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and installed_version_registered.stdout != autorestic_pinned_ver )

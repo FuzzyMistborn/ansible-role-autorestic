@@ -34,7 +34,9 @@
     restic_ver: "{{ restic_pinned_ver }}"
   when: restic_download_latest_ver == False
 
-- block:
+- name: Install restic
+  when: restic_is_installed == False or ( restic_is_installed == True and restic_download_latest_ver == True and installed_version_registered.stdout != restic_ver ) or ( restic_is_installed == True and restic_download_latest_ver == False and installed_version_registered.stdout != restic_pinned_ver )
+  block:
     - name: Ensure restic_download_directory does not exist
       ansible.builtin.file:
         path: "{{ restic_download_directory }}"
@@ -55,10 +57,14 @@
         group: root
         mode: +x
 
+    - name: Ensure bzip2 is installed
+      ansible.builtin.package:
+        name: bzip2
+        state: present
+
     - name: Set restic filename
-      ansible.builtin.set_fact: file_name="restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
+      ansible.builtin.set_fact:
+        file_name: "restic_{{ restic_ver }}_{{ restic_distro }}.bz2"
 
     - name: Unzip restic release
       ansible.builtin.shell: "cd {{ restic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ restic_install_path }}"
-
-  when: restic_is_installed == False or ( restic_is_installed == True and restic_download_latest_ver == True and installed_version_registered.stdout != restic_ver ) or ( restic_is_installed == True and restic_download_latest_ver == False and installed_version_registered.stdout != restic_pinned_ver )
