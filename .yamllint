@@ -25,4 +25,4 @@ rules:
 
 ignore: |
   .woodpecker/.lint.yaml
-  .woodpecker/.push-to-galaxy.yaml 
+  .woodpecker/.push-to-galaxy.yaml
