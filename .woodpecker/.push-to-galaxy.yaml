@@ -5,8 +5,6 @@ steps:
       - galaxy_api_key
     commands:
       - ansible-galaxy role import --api-key $galaxy_api_key FuzzyMistborn ansible-role-autorestic
-    when:
-      event: release
 
   - name: Send TG Notification
     image: appleboy/drone-telegram
@@ -18,7 +16,10 @@ steps:
       format: markdown
       message: "{{#success build.status}}✅  Push to Ansible Galaxy for `{{repo.name}}` was *successful*!{{else}}❌  Push to Ansible Galaxy for `{{repo.name}}` has *FAILED*!{{/success}} \n🌐  [Output]({{build.link}})"
     when:
-      event: release
+      event: {}
       status:
         - success
         - failure
+
+when:
+  event: release
