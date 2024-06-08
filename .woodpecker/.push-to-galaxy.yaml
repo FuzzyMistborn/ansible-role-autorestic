@@ -22,6 +22,3 @@ steps:
       status:
         - success
         - failure
-
-when:
-  event: release
