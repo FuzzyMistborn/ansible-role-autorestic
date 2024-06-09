@@ -5,8 +5,6 @@ steps:
       - galaxy_api_key
     commands:
       - ansible-galaxy role import --api-key $galaxy_api_key FuzzyMistborn ansible-role-autorestic
-    when:
-      event: {}
 
   - name: Send TG Notification
     image: appleboy/drone-telegram
