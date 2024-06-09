@@ -86,7 +86,7 @@ That's it!
 
 ## To Do
 
-- Add cronjob variables (?) for basic tasks (backup, forget, etc).
+- ~~Add cronjob variables (?) for basic tasks (backup, forget, etc).~~
   - Don't think I will implement.  Too personalized and too much variety in how to do.  Will keep trying to think up a way.
 - ~~Find a way to pin restic even if updating autorestic.~~
 
