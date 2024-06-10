@@ -70,6 +70,6 @@
       ansible.builtin.shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ autorestic_install_path }}"
 
     - name: Fedora - SELinux Fix
-      ansible.builtin.shell: restorecon -Rv /usr/local/bin
+      ansible.builtin.command: restorecon -Rv /usr/local/bin
       become: true
       when: ansible_distribution == 'Fedora'
