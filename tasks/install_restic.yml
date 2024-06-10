@@ -68,3 +68,8 @@
 
     - name: Unzip restic release
       ansible.builtin.shell: "cd {{ restic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ restic_install_path }}"
+
+    - name: Fedora - SELinux Fix
+      ansible.builtin.shell: restorecon -Rv /usr/local/bin
+      become: true
+      when: ansible_distribution == 'Fedora'
