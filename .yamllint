@@ -22,7 +22,13 @@ rules:
   new-line-at-end-of-file: disable
   truthy:
     allowed-values: ['true', 'false', 'yes', 'no']
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
+  comments:
+    min-spaces-from-content: 1
 
 ignore: |
   .woodpecker/.lint.yaml
   .woodpecker/.push-to-galaxy.yaml
+  FUNDING.yml

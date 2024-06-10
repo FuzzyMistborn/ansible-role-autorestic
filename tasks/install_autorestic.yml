@@ -46,7 +46,7 @@
       ansible.builtin.file:
         path: "{{ autorestic_download_directory }}"
         state: directory
-        mode: 0755
+        mode: "0755"
 
     - name: Download autorestic
       ansible.builtin.get_url:
