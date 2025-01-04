@@ -9,13 +9,13 @@
   ansible.builtin.set_fact:
     autorestic_user_directory: "{{ autorestic_user_register.home }}"
 
-- name: create autorestic_config_path
-  file:
+- name: Create autorestic_config_path
+  ansible.builtin.file:
     path: "{{ autorestic_config_directory }}"
     owner: "{{ autorestic_config_owner }}"
     group: "{{ autorestic_config_group }}"
     state: directory
-    mode: 0755
+    mode: "0755"
 
 - name: Copy autorestic config file
   ansible.builtin.copy:
