@@ -9,7 +9,7 @@
   ansible.builtin.set_fact:
     autorestic_user_directory: "{{ autorestic_user_register.home }}"
 
-- name: Create autorestic_config_path
+- name: Create autorestic_config_directory
   ansible.builtin.file:
     path: "{{ autorestic_config_directory }}"
     owner: "{{ autorestic_config_owner }}"
