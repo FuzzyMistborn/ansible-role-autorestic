@@ -25,7 +25,8 @@ autorestic_install_path: "{{ autorestic_install_directory }}/autorestic"
 ### Autorestic Config
 autorestic_config_user: root
 autorestic_config_yaml: CHANGEME  # autorestic configuration in yaml
-autorestic_config_path: "{{ autorestic_user_directory }}/.autorestic.yml"
+autorestic_config_directory: /home/{{ autorestic_config_user }}/.config/autorestic
+autorestic_config_path: "{{ autorestic_config_directory }}/.autorestic.yml"
 autorestic_config_mode: "0600"
 autorestic_config_owner: "{{ autorestic_config_user }}"
 autorestic_config_group: "{{ autorestic_config_user }}"
