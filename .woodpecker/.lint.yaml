@@ -5,20 +5,5 @@ steps:
       - ansible-lint .
       - yamllint .
 
-  - name: Send TG Notification
-    image: appleboy/drone-telegram
-    settings:
-      token:
-        from_secret: tg_token
-      to:
-        from_secret: tg_id
-      format: markdown
-      message: "{{#success build.status}}✅  Build for `{{repo.name}}` was *successful*!{{else}}❌  Build for `{{repo.name}}` has *FAILED*!{{/success}} \n🌐  [Output]({{build.link}})\n📝  Commit: {{ commit.message }}"
-    when:
-      event: {}
-      status:
-        - success
-        - failure
-
 when:
   event: push
