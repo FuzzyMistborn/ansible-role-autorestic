@@ -1,9 +1,9 @@
 steps:
   - name: Push
     image: fuzzymistborn/docker-linting:latest
-    environment:
-      galaxy_api_key:
-        from_secret: galaxy_api_key
+#    environment:
+#      galaxy_api_key:
+#        from_secret: galaxy_api_key
     commands:
       - ansible-galaxy role import --api-key $galaxy_api_key FuzzyMistborn ansible-role-autorestic
 
