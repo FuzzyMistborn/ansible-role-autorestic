@@ -12,6 +12,7 @@
   ansible.builtin.shell: "{{ is_installed.stat.path }} --version | grep -oP 'autorestic\\ version\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
   register: installed_version_registered
   changed_when: false
+  check_mode: false
   when: autorestic_is_installed == True
 
 - name: Get latest GH autorestic version
