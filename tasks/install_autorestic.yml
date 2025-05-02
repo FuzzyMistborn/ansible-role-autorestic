@@ -24,6 +24,7 @@
     force_basic_auth: "{{ github_api_auth | default(omit) }}"
   register: release_version_registered
   when: autorestic_download_latest_ver == True
+  check_mode: false
 
 - name: Set autorestic version (latest)
   ansible.builtin.set_fact:
