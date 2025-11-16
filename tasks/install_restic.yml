@@ -74,4 +74,4 @@
     - name: Fedora - SELinux Fix
       ansible.builtin.command: restorecon -Rv /usr/local/bin
       become: true
-      when: ansible_distribution == 'Fedora'
+      when: ansible_facts.distribution == 'Fedora'
