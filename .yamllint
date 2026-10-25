@@ -21,7 +21,7 @@ rules:
   line-length: disable
   new-line-at-end-of-file: disable
   truthy:
-    allowed-values: ['true', 'false', 'yes', 'no']
+    allowed-values: ["true", "false", "yes", "no"]
   octal-values:
     forbid-implicit-octal: true
     forbid-explicit-octal: true

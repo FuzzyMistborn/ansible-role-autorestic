@@ -14,13 +14,13 @@ Install with `ansible-galaxy install fuzzymistborn.autorestic`
 
 This role has a number of variables that can be configured.
 
-Additionally, you can pin a specific version of either binary with `autorestic_pinned_ver` or `restic_pinned_ver`.  By default the role fetches and installs the latest available version, and will run the update command if the binary is already present every time the role is run.  You can disable this by pinning to a specific version.  Here's an example if you wanted to set the version.
+Additionally, you can pin a specific version of either binary with `autorestic_pinned_ver` or `autorestic_restic_pinned_ver`.  By default the role fetches and installs the latest available version, and will run the update command if the binary is already present every time the role is run.  You can disable this by pinning to a specific version.  Here's an example if you wanted to set the version.
 
 ```yaml
 autorestic_download_latest_ver: false
 autorestic_pinned_ver: 1.2.0
-restic_download_latest_ver: false
-restic_pinned_ver: 0.12.1
+autorestic_restic_download_latest_ver: false
+autorestic_restic_pinned_ver: 0.12.1
 ```
 By setting a pinned version, the updater commands will not run and a version will only be pulled if the installed version does not match the pinned version.
 
@@ -36,9 +36,9 @@ autorestic_config_owner: "{{ autorestic_config_user }}"
 autorestic_config_group: "{{ autorestic_config_user }}"
 
 autorestic_distro: linux_amd64
-restic_distro: linux_amd64
+autorestic_restic_distro: linux_amd64
 ```
-The other variables, like `restic_gh_url`, `restic_install_directory`, etc I do not recommend changing unless you want to customize the install.
+The other variables, like `autorestic_restic_gh_url`, `autorestic_restic_install_directory`, etc I do not recommend changing unless you want to customize the install.
 
 See the release pages for [autorestic](https://github.com/cupcakearmy/autorestic/releases) and [restic](https://github.com/restic/restic/releases/) to find the correct distribution for your install.
 

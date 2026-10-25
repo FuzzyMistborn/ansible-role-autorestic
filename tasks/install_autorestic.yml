@@ -2,15 +2,15 @@
 - name: Get status of autorestic_install_path
   ansible.builtin.stat:
     path: "{{ autorestic_install_path }}"
-  register: is_installed
+  register: autorestic_stat
 
 - name: Set autorestic installed
   ansible.builtin.set_fact:
-    autorestic_is_installed: "{{ is_installed.stat.exists }}"
+    autorestic_is_installed: "{{ autorestic_stat.stat.exists }}"
 
 - name: Get installed autorestic version
-  ansible.builtin.shell: "{{ is_installed.stat.path }} --version | grep -oP 'autorestic\\ version\ \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
-  register: installed_version_registered
+  ansible.builtin.shell: "{{ autorestic_stat.stat.path }} --version | grep -oP 'autorestic\\ version \\K[0-9]*\\.[0-9]*\\.[0-9]*'"
+  register: autorestic_installed_version_registered
   changed_when: false
   check_mode: false
   when: autorestic_is_installed == True
@@ -22,13 +22,13 @@
     url_password: "{{ github_api_pass | default(omit) }}"
     return_content: true
     force_basic_auth: "{{ github_api_auth | default(omit) }}"
-  register: release_version_registered
+  register: autorestic_release_registered
   when: autorestic_download_latest_ver == True
   check_mode: false
 
 - name: Set autorestic version (latest)
   ansible.builtin.set_fact:
-    autorestic_ver: "{{ release_version_registered.json.tag_name | regex_replace('v') }}"
+    autorestic_ver: "{{ autorestic_release_registered.json.tag_name | regex_replace('v') }}"
   when: autorestic_download_latest_ver == True
 
 - name: Set autorestic version (pinned)
@@ -37,7 +37,9 @@
   when: autorestic_download_latest_ver == False
 
 - name: Install Autorestic
-  when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == True and installed_version_registered.stdout != autorestic_ver ) or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and installed_version_registered.stdout != autorestic_pinned_ver )
+  when: autorestic_is_installed == False or ( autorestic_is_installed == True and autorestic_download_latest_ver == True and autorestic_installed_version_registered.stdout
+    != autorestic_ver ) or ( autorestic_is_installed == True and autorestic_download_latest_ver == False and autorestic_installed_version_registered.stdout !=
+    autorestic_pinned_ver )
   block:
     - name: Ensure autorestic_download_directory does not exist
       ansible.builtin.file:
@@ -54,7 +56,7 @@
       ansible.builtin.get_url:
         url: "{{ autorestic_gh_url }}/v{{ autorestic_ver }}/autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
         dest: "{{ autorestic_download_directory }}"
-        force: yes
+        force: true
         owner: root
         group: root
         mode: +x
@@ -66,10 +68,11 @@
 
     - name: Set autorestic filename
       ansible.builtin.set_fact:
-        file_name: "autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
+        autorestic_file_name: "autorestic_{{ autorestic_ver }}_{{ autorestic_distro }}.bz2"
 
     - name: Unzip autorestic release
-      ansible.builtin.shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ file_name }} && mv {{ file_name | regex_replace('.bz2') }} {{ autorestic_install_path }}"
+      ansible.builtin.shell: "cd {{ autorestic_download_directory }} && bzip2 -d {{ autorestic_file_name }} && mv {{ autorestic_file_name | regex_replace('.bz2') }} {{ autorestic_install_path
+        }}"
 
     - name: Fedora - SELinux Fix
       ansible.builtin.command: restorecon -Rv /usr/local/bin
