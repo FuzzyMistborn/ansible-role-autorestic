@@ -14,7 +14,7 @@ steps:
       to:
         from_secret: tg_id
       format: markdown
-      message: "✅  Build for `${CI_REPO_NAME}` was *successful*!\n🌐  [Output](${CI_PIPELINE_URL})\n📝  Commit: ${CI_COMMIT_MESSAGE}"
+      message: "✅  Build for `${CI_REPO_NAME}` was *successful*!\n🌐  [Output](${CI_PIPELINE_URL})\n📝  Commit: `${CI_COMMIT_MESSAGE}`"
     when:
       - event: push
         status: [success]
@@ -27,7 +27,7 @@ steps:
       to:
         from_secret: tg_id
       format: markdown
-      message: "❌  Build for `${CI_REPO_NAME}` has *FAILED*!\n🌐  [Output](${CI_PIPELINE_URL})\n📝  Commit: ${CI_COMMIT_MESSAGE}"
+      message: "❌  Build for `${CI_REPO_NAME}` has *FAILED*!\n🌐  [Output](${CI_PIPELINE_URL})\n📝  Commit: `${CI_COMMIT_MESSAGE}`"
     when:
       - event: push
         status: [failure]
